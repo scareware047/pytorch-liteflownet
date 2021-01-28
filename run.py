@@ -10,6 +10,8 @@ import PIL
 import PIL.Image
 import sys
 
+import time
+
 try:
 	from .correlation import correlation # the custom cost volume layer
 except:
@@ -371,6 +373,29 @@ def estimate(tenFirst, tenSecond):
 ##########################################################
 
 if __name__ == '__main__':
+
+	height = 624
+	width = 192
+	channels = 3
+
+	random_tensor = numpy.ones((width, height, channels))
+
+	tensor_first = torch.FloatTensor(random_tensor)
+	tensor_second = torch.FloatTensor(random_tensor)
+
+	time_taken = 0	
+
+	for _ in range(100):
+		start = time.time()
+		tenOutput = estimate(random_tensor, random_tensor)
+		end = start - time.time()
+		time_taken += end
+
+	time_taken /= 100
+
+	print(f"Time Taken : {time_taken:.3f} Seconds!")
+
+	"""
 	tenFirst = torch.FloatTensor(numpy.ascontiguousarray(numpy.array(PIL.Image.open(arguments_strFirst))[:, :, ::-1].transpose(2, 0, 1).astype(numpy.float32) * (1.0 / 255.0)))
 	tenSecond = torch.FloatTensor(numpy.ascontiguousarray(numpy.array(PIL.Image.open(arguments_strSecond))[:, :, ::-1].transpose(2, 0, 1).astype(numpy.float32) * (1.0 / 255.0)))
 
@@ -383,4 +408,5 @@ if __name__ == '__main__':
 	numpy.array(tenOutput.numpy().transpose(1, 2, 0), numpy.float32).tofile(objOutput)
 
 	objOutput.close()
+	"""
 # end
